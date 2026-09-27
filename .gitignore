@@ -1,0 +1,24 @@
+# Environment
+.env
+.env.local
+*.key
+*.secret
+*.password
+*credentials*
+
+# Build
+__pycache__/
+*.pyc
+node_modules/
+
+# Reports (runtime outputs)
+report-*.csv
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Internal HeyRepli files - NEVER commit
+cloudflare-edition/
+各类API密钥/

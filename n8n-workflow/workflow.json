@@ -1,0 +1,73 @@
+{
+  "name": "HeyRepli: YouTube to Twitter",
+  "nodes": [
+    {
+      "name": "Cron",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "hours": 9
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Video IDs",
+      "type": "n8n-nodes-base.code",
+      "parameters": {
+        "jsCode": "return [{json: {videoId: \"dQw4w9WgXcQ\"}}];"
+      }
+    },
+    {
+      "name": "Get Transcript",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.heyrepli.com/api/v1/mcp",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "tools/call",
+          "params": {
+            "name": "scrape_youtube_transcript",
+            "arguments": {
+              "videoId": "={{.videoId}}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "AI Rewrite",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.heyrepli.com/api/v1/mcp",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "tools/call",
+          "params": {
+            "name": "ai_rewrite",
+            "arguments": {
+              "text": "={{.fullText.slice(0,500)}}",
+              "style": "casual",
+              "platform": "twitter"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "connections": {}
+}

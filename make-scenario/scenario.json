@@ -1,0 +1,27 @@
+{
+  "name": "HeyRepli: Sheet -> 6 platforms",
+  "flow": [
+    {
+      "id": 1,
+      "module": "google-sheets:watchRows",
+      "filter": {
+        "status": "approved"
+      }
+    },
+    {
+      "id": 2,
+      "module": "http:action",
+      "url": "https://api.heyrepli.com/api/v1/open/schedule",
+      "method": "POST",
+      "headers": {
+        "X-API-Key": "{{env.HEYREPLI_API_KEY}}",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "platform": "{{1.platform}}",
+        "content": "{{1.content}}",
+        "scheduled_at": "{{1.scheduled_at}}"
+      }
+    }
+  ]
+}
